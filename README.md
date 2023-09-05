@@ -15,6 +15,7 @@ Nobody else is able to manage the todolist except for my wife...
 - Ethers.js
 - Hardhat
 - Git
+- ReactJs
 
 ### Requirements
 
