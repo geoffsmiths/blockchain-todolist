@@ -32,3 +32,18 @@ You should have installed NodeJS and Hardhat
 
 ### Now we run some unit tests (can be found in ./test)
 `npx hardhat test`
+
+## Deployment & Seeding
+
+First we need to get de blockchain node running:
+
+`npx hardhat node`
+
+### Deployment
+
+`npx hardhat run --network localhost ./scripts/deploy.js`
+
+### Seeding
+
+`npx hardhat run --network localhost ./scripts/seed_todolist.js`
+
