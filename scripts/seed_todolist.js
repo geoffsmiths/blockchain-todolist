@@ -24,15 +24,26 @@ async function main() {
   console.log(`TodoList contract fetched: ${TodoList.address}\n`);
 
   // Create Tasks
+  let tasks = [
+    { category: "Cleaning", description: "LivingRoom" },
+    { category: "Shopping", description: "Groceries" },
+    { category: "Shopping", description: "Returning books" },
+    { category: "Babysitting", description: "Siblings" },
+    { category: "Cleaning", description: "Car" },
+  ];
   let transaction, result;
-  transaction = await TodoList.connect(deployer).addTask(
-    "Cleaning",
-    "LivingRoom"
-  );
+  for (let i = 0; i < tasks.length; i++) {
+    transaction = await TodoList.connect(deployer).addTask(
+      tasks[i].category,
+      tasks[i].description
+    );
 
-  result = await transaction.wait();
-  if (result.events[0].event === "TaskCreated") {
-    console.log("Success!! - Task1 created by wife");
+    await wait(1);
+
+    result = await transaction.wait();
+    if (result.events[0].event === "TaskCreated") {
+      console.log("Success!! - Task" + i + " created by wife");
+    }
   }
 }
 

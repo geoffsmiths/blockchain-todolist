@@ -12,6 +12,11 @@ export const tasks = (state = {}, action) => {
           data: action.allTasks,
         },
       };
+    case "NETWORK_LOADED":
+      return {
+        ...state,
+        chainId: action.chainId,
+      };
     default:
       return false;
   }
