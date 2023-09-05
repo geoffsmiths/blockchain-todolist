@@ -13,7 +13,7 @@ contract TodoList {
 
     address public wife;
 
-    mapping(address => mapping(uint256 => Task)) public assignees;
+    mapping(uint256 => Task) public tasks;
 
     constructor() {
         wife = msg.sender;
@@ -34,30 +34,29 @@ contract TodoList {
     );
 
     function addTask(
-        address assignee,
         string memory category,
         string memory description
     ) external {
         require(msg.sender == wife, "Only your wife can add tasks");
         counter = counter + 1;
 
-        assignees[assignee][counter].id = counter;
-        assignees[assignee][counter].category = category;
-        assignees[assignee][counter].description = description;
-        assignees[assignee][counter].complete = false;
+        tasks[counter].id = counter;
+        tasks[counter].category = category;
+        tasks[counter].description = description;
+        tasks[counter].complete = false;
 
         emit TaskCreated(counter, category, description, false);
     }
 
-    function completeTask(address assignee, uint256 _id) external {
+    function completeTask(uint256 _id) external {
         require(msg.sender == wife, "Only your wife can complete tasks");
 
-        assignees[assignee][_id].complete = true;
+        tasks[_id].complete = true;
 
         emit TaskCompleted(
             _id,
-            assignees[assignee][_id].category,
-            assignees[assignee][_id].description,
+            tasks[_id].category,
+            tasks[_id].description,
             true
         );
     }

@@ -26,13 +26,12 @@ async function main() {
   // Create Tasks
   let transaction, result;
   transaction = await TodoList.connect(deployer).addTask(
-    deployer.address,
     "Cleaning",
     "LivingRoom"
   );
 
   result = await transaction.wait();
-  if (result.events[0].event == "TaskCreated") {
+  if (result.events[0].event === "TaskCreated") {
     console.log("Success!! - Task1 created by wife");
   }
 }
