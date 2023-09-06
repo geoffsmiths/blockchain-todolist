@@ -1,3 +1,7 @@
 export const CreateTask = () => {
-  return <div>CreateTask</div>;
+  return (
+    <div>
+      <h4>CreateTask</h4>
+    </div>
+  );
 };

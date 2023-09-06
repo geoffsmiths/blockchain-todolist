@@ -32,18 +32,27 @@ async function main() {
     { category: "Cleaning", description: "Car" },
   ];
   let transaction, result;
-  for (let i = 0; i < tasks.length; i++) {
-    transaction = await TodoList.connect(deployer).addTask(
-      tasks[i].category,
-      tasks[i].description
-    );
 
-    await wait(1);
+  for (let j = 0; j < accounts.length; j++) {
+    console.log(`${j} - For ${accounts[j].address}:`);
+    for (let i = 0; i < tasks.length; i++) {
+      transaction = await TodoList.connect(accounts[j]).addTask(
+        tasks[i].category,
+        tasks[i].description
+      );
 
-    result = await transaction.wait();
-    if (result.events[0].event === "TaskCreated") {
-      console.log("Success!! - Task" + i + " created by wife");
+      await wait(1);
+
+      result = await transaction.wait();
+      if (result.events[0].event === "TaskCreated") {
+        console.log(
+          `Task ${i + 1} created: ${tasks[i].category}, ${
+            tasks[i].description
+          }.`
+        );
+      }
     }
+    console.log("\n");
   }
 }
 
