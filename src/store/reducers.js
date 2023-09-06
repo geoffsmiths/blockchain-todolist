@@ -26,13 +26,46 @@ export const provider = (state = {}, action) => {
   }
 };
 
-export const tasks = (state = {}, action) => {
+export const contract = (state = {}, action) => {
+  switch (action.type) {
+    case "CONTRACT_LOADED":
+      return {
+        ...state,
+        contract: action.contract,
+      };
+    default:
+      return state;
+  }
+};
+
+const DEFAULT_TASK_STATE = {
+  transaction: {
+    isSuccessful: false,
+  },
+};
+
+export const tasks = (state = DEFAULT_TASK_STATE, action) => {
   switch (action.type) {
     case "TASKS_LOADED":
       return {
         ...state,
         alltasks: {
           data: action.allTasks,
+        },
+      };
+    case "TASK_CREATED":
+      return {
+        ...state,
+        task: action.task,
+        transaction: {
+          isSuccessful: true,
+        },
+      };
+    case "TASK_CREATE_FAIL":
+      return {
+        ...state,
+        transaction: {
+          isSuccessful: false,
         },
       };
     default:

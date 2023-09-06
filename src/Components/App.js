@@ -3,9 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   loadAccount,
   loadConfig,
+  loadContract,
   loadNetwork,
   loadProvider,
   loadTodoList,
+  subscribeToEvents,
 } from "../store/interactions";
 
 import { CreateTask } from "./CreateTask";
@@ -16,7 +18,6 @@ import config from "../config.json";
 function App() {
   const dispatch = useDispatch();
   const account = useSelector((state) => state.provider.account);
-  const ca = useSelector((state) => state.provider.config);
 
   const loadBlockchainData = async () => {
     // Connect Ethers to Blockchain
@@ -31,13 +32,24 @@ function App() {
       window.location.reload();
     });
 
+    // Load exchange smart contract
+    const contractConfig = config[chainId].TODOLIST;
+    const contract = await loadContract(
+      contractConfig.address,
+      provider,
+      dispatch
+    );
+
     // Fetch current account and balance from metamask
     window.ethereum.on("accountsChanged", async () => {
       await loadAccount(provider, dispatch);
     });
 
     if (account) {
-      loadTodoList(ca.address, account, provider, dispatch);
+      await loadTodoList(contract, provider, dispatch);
+
+      // listen to events
+      subscribeToEvents(contract, provider, dispatch);
     }
   };
 
@@ -47,13 +59,12 @@ function App() {
 
   return (
     <div>
+      <ConnectBtn />
       <h1>Todo List</h1>
 
       <Listing />
 
       <CreateTask />
-
-      <ConnectBtn />
     </div>
   );
 }
