@@ -3,9 +3,10 @@ import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 
 /* Import Reducers */
-import { tasks } from "./reducers";
+import { provider, tasks } from "./reducers";
 
 const reducer = combineReducers({
+  provider,
   tasks,
 });
 

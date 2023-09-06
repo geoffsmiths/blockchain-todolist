@@ -11,54 +11,51 @@ describe("TodoList", () => {
     contract = await Contract.connect(deployer).deploy();
   });
 
-  it("Your wife is the Deployer", async () => {
-    const wife = await contract.wife();
-    expect(deployer.address).is.equal.toString(wife);
-  });
-
-  it("Only your wife can add tasks", async () => {
-    await expect(
-      contract.connect(user1).addTask("Cleaning", "LivingRoom")
-    ).to.be.revertedWith("Only your wife can add tasks");
-  });
-
   it("Create Task", async () => {
-    tx = await contract.addTask("Cleaning", "Bathroom");
+    tx = await contract.connect(accounts[2]).addTask("Cleaning", "Bathroom");
     result = await tx.wait();
     const args = result.events[0].args;
-    id = args[0].toString();
-    expect(id).to.equal("1");
+    expect(args.id.toString()).to.equal("1");
+    expect(args.user).to.equal(accounts[2].address);
     expect(args.category).to.equal("Cleaning");
     expect(args.description).to.equal("Bathroom");
     expect(args.complete).to.equal(false);
   });
 
   it("Emits TaskCreated Event", async () => {
-    tx = await contract.addTask("Cleaning", "Toilet");
+    tx = await contract.connect(accounts[3]).addTask("Cleaning", "Toilet");
     result = await tx.wait();
     expect(result.events[0].event).is.equal.toString("TaskCreated");
   });
 
   it("Completes task", async () => {
-    tx = await contract.completeTask(ethers.BigNumber.from(id));
+    tx = await contract.connect(accounts[3]).addTask("Cleaning", "Toilet");
     result = await tx.wait();
-    expect(result.events[0].event).is.equal.toString("TaskCompleted");
     const args = result.events[0].args;
-    expect(args.complete).to.equal(true);
+
+    tx = await contract
+      .connect(accounts[3])
+      .completeTask(ethers.BigNumber.from(args.id));
+
+    result = await tx.wait();
+
+    expect(result.events[0].event).is.equal.toString("TaskCompleted");
+    expect(result.events[0].args.complete).to.equal(true);
   });
 
   it("Create and Fetch tasks", async () => {
     for (let i = 0; i < 5; i++) {
-      tx = await contract.addTask("Cleaning " + i, "Toilet " + i);
+      tx = await contract
+        .connect(accounts[1])
+        .addTask("Cleaning " + i, "Toilet " + i);
       result = await tx.wait();
     }
 
     tx = await contract.counter();
 
-    result = await contract.tasks(1);
-
-    expect(result.id).to.equal(1);
-    expect(result.category).to.equal("Cleaning 0");
-    expect(result.description).to.equal("Toilet 0");
+    result = await contract.tasks(accounts[1].address, 3);
+    expect(result.id.toString()).to.equal("3");
+    expect(result.category).to.equal("Cleaning 2");
+    expect(result.description).to.equal("Toilet 2");
   });
 });

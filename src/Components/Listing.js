@@ -1,7 +1,8 @@
 import { useSelector } from "react-redux";
+import { myTasksSelector } from "../store/selectors";
 
 export const Listing = () => {
-  const tasks = useSelector((state) => state.tasks.alltasks);
+  const tasks = useSelector(myTasksSelector);
 
   return (
     <div>
@@ -16,9 +17,9 @@ export const Listing = () => {
         </thead>
         <tbody>
           {tasks &&
-            tasks.data.map((task, index) => (
+            tasks.map((task, index) => (
               <tr key={index}>
-                <td>{task.id.toString()}</td>
+                <td>{index + 1}</td>
                 <td>{task.category}</td>
                 <td>{task.description}</td>
               </tr>
