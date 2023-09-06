@@ -8,9 +8,7 @@ const wait = (seconds) => {
 
 async function main() {
   // Fetch accounts from wallet
-  let deployer;
   const accounts = await ethers.getSigners();
-  deployer = accounts[0];
 
   // Fetch network
   const { chainId } = await ethers.provider.getNetwork();
