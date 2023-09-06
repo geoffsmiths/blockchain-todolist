@@ -47,3 +47,14 @@ First we need to get de blockchain node running:
 
 `npx hardhat run --network localhost ./scripts/seed_todolist.js`
 
+## Running the app
+
+### Requirements
+
+- Metamask installed
+- hardhat node running
+- at least 1 hardhat node dummy address imported in metamask
+- Metamask configured with localhost network with chainID: 31337
+
+If you meet the requirements then simply do: `npm run start`
+
